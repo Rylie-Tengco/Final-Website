@@ -118,36 +118,36 @@ const cardVariants = {
 function Goals() {
   const professionalGoals = [
     {
-      title: "Master Full-Stack Development",
-      progress: 75,
+      title: "Make a Personal Website",
+      progress: 65,
       description: "Becoming proficient in both front-end and back-end development technologies.",
       milestones: [
-        { text: "Learn React and its ecosystem", completed: true },
-        { text: "Master Node.js and Express", completed: true },
-        { text: "Study database design and management", completed: true },
-        { text: "Build complex full-stack applications", completed: false }
+        { text: "Draft initial site layout and design mockups", completed: true },
+        { text: "Implement responsive design for mobile and desktop", completed: true },
+        { text: "Focus on user experience", completed: true },
+        { text: "Analyze and Improve", completed: false }
       ]
     },
     {
-      title: "Contribute to Open Source",
-      progress: 40,
-      description: "Actively participating in open-source projects and contributing to the community.",
+      title: "Master Coding in Different Languages",
+      progress: 35,
+      description: "Expand my programming skill set by learning multiple languages, enabling me to tackle a wide range of projects and challenges.",
       milestones: [
-        { text: "Find suitable projects to contribute", completed: true },
-        { text: "Make first pull request", completed: true },
-        { text: "Become a regular contributor", completed: false },
-        { text: "Start own open source project", completed: false }
+        { text: "Identify core languages to focus on (e.g., Python, JavaScript, CSS)", completed: true },
+        { text: "Work on mini-projects to apply new concepts", completed: true },
+        { text: "Follow structured courses or tutorials for each language", completed: false },
+        { text: "Contribute to open-source projects for real-world experience", completed: false }
       ]
     },
     {
-      title: "Achieve Cloud Certification",
-      progress: 25,
+      title: "Make My Personal AI",
+      progress: 5,
       description: "Obtaining professional certification in cloud technologies.",
       milestones: [
-        { text: "Complete online courses", completed: true },
-        { text: "Practice with cloud platforms", completed: false },
-        { text: "Take practice exams", completed: false },
-        { text: "Pass certification exam", completed: false }
+        { text: "Define the AI’s main purpose and scope", completed: true },
+        { text: "Research relevant libraries and frameworks (e.g., TensorFlow, PyTorch)", completed: false },
+        { text: "Build a prototype model and train it on sample data", completed: false },
+        { text: "Continuously refine the AI’s accuracy and performance through testing", completed: false }
       ]
     }
   ];

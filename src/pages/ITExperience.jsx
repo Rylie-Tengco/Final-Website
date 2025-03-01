@@ -113,41 +113,41 @@ function ITExperience() {
   const experiences = [
     {
       id: 1,
-      company: "Tech Solutions Inc.",
-      duration: "2022 - Present",
-      role: "Senior Full Stack Developer",
-      techStack: ["React", "Node.js", "PostgreSQL", "AWS", "Docker"],
+      company: "Personal Website Development",
+      duration: "2024 - Present",
+      role: "Developer",
+      techStack: ["Html", "CSS", "Javascript", "Bootstrap", "React"],
       responsibilities: [
-        "Led development of enterprise-scale web applications",
-        "Mentored junior developers and conducted code reviews",
-        "Implemented CI/CD pipelines and automated testing",
-        "Optimized application performance and reduced loading times by 40%"
+        "Designed and Developed Responsive Pages",
+        "Integrated Interactive Components",
+        "Optimized Performance and Accessibility",
+        "Enhanced Cross-Browser Compatibility"
       ]
     },
     {
       id: 2,
-      company: "Digital Innovations",
-      duration: "2020 - 2022",
-      role: "Frontend Developer",
-      techStack: ["React", "TypeScript", "Redux", "Material-UI", "Jest"],
+      company: "Mobile Application Development",
+      duration: "2024 - Present",
+      role: "Developer",
+      techStack: ["Android Studio", "Figma", "Java", "Dart", "AI"],
       responsibilities: [
-        "Developed responsive web applications using React",
-        "Implemented state management solutions using Redux",
-        "Created reusable component libraries",
-        "Collaborated with UX designers to implement pixel-perfect designs"
+        "Prototyped User-Centric Interfaces with Figma",
+        "Developed Android Apps in Android Studio",
+        "Integrated AI-Powered Features",
+        "Explored Cross-Platform Development with Dart"
       ]
     },
     {
       id: 3,
-      company: "StartUp Solutions",
-      duration: "2019 - 2020",
-      role: "Junior Developer",
-      techStack: ["JavaScript", "HTML", "CSS", "jQuery", "Bootstrap"],
+      company: "",
+      duration: "2024 - Present",
+      role: "Developer",
+      techStack: ["", "", "", "", ""],
       responsibilities: [
-        "Built and maintained client websites",
-        "Implemented responsive designs",
-        "Optimized website performance",
-        "Assisted in bug fixing and feature implementation"
+        "",
+        "",
+        "",
+        ""
       ]
     }
   ];

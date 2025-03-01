@@ -18,14 +18,24 @@ const Title = styled.h1`
                0 0 20px rgba(255, 255, 255, 0.3);
 `;
 
+const ContentLayout = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 const FormContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
   background: rgba(255, 255, 255, 0.8);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
+  height: fit-content;
 `;
 
 const Form = styled.form`
@@ -107,11 +117,30 @@ const Message = styled(motion.div)`
 `;
 
 const FeedbackList = styled.div`
-  max-width: 800px;
-  margin: 2rem auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-height: 800px;
+  overflow-y: auto;
+  padding-right: 1rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #2A9D8F;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #1A1B2F;
+  }
 `;
 
 const FeedbackCard = styled(motion.div)`
@@ -252,102 +281,104 @@ function Feedback() {
     >
       <PageContainer>
         <Title>Feedback</Title>
-        <FormContainer>
-          <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label htmlFor="name">Name</Label>
-              <Input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Your name"
-              />
-              {errors.name && <ErrorText>{errors.name}</ErrorText>}
-            </FormGroup>
+        <ContentLayout>
+          <FormContainer>
+            <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your name"
+                />
+                {errors.name && <ErrorText>{errors.name}</ErrorText>}
+              </FormGroup>
 
-            <FormGroup>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="your.email@example.com"
-              />
-              {errors.email && <ErrorText>{errors.email}</ErrorText>}
-            </FormGroup>
+              <FormGroup>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your.email@example.com"
+                />
+                {errors.email && <ErrorText>{errors.email}</ErrorText>}
+              </FormGroup>
 
-            <FormGroup>
-              <Label htmlFor="subject">Subject</Label>
-              <Input
-                type="text"
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                placeholder="What's this about?"
-              />
-              {errors.subject && <ErrorText>{errors.subject}</ErrorText>}
-            </FormGroup>
+              <FormGroup>
+                <Label htmlFor="subject">Subject</Label>
+                <Input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  placeholder="What's this about?"
+                />
+                {errors.subject && <ErrorText>{errors.subject}</ErrorText>}
+              </FormGroup>
 
-            <FormGroup>
-              <Label htmlFor="message">Message</Label>
-              <TextArea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Your message here..."
-              />
-              {errors.message && <ErrorText>{errors.message}</ErrorText>}
-            </FormGroup>
+              <FormGroup>
+                <Label htmlFor="message">Message</Label>
+                <TextArea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Your message here..."
+                />
+                {errors.message && <ErrorText>{errors.message}</ErrorText>}
+              </FormGroup>
 
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </Button>
-          </Form>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+              </Button>
+            </Form>
 
-          {submitStatus && (
-            <Message
-              type={submitStatus}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
-              {submitStatus === 'success' 
-                ? 'Thank you for your feedback! We will get back to you soon.'
-                : 'Something went wrong. Please try again later.'}
-            </Message>
-          )}
-        </FormContainer>
+            {submitStatus && (
+              <Message
+                type={submitStatus}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                {submitStatus === 'success' 
+                  ? 'Thank you for your feedback! We will get back to you soon.'
+                  : 'Something went wrong. Please try again later.'}
+              </Message>
+            )}
+          </FormContainer>
 
-        <FeedbackList>
-          {feedbacks.map((feedback) => (
-            <FeedbackCard
-              key={feedback.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FeedbackHeader>
-                <FeedbackName>{feedback.name}</FeedbackName>
-                <FeedbackTime>
-                  {new Date(feedback.timestamp).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </FeedbackTime>
-              </FeedbackHeader>
-              <FeedbackSubject>{feedback.subject}</FeedbackSubject>
-              <FeedbackMessage>{feedback.message}</FeedbackMessage>
-            </FeedbackCard>
-          ))}
-        </FeedbackList>
+          <FeedbackList>
+            {feedbacks.map((feedback) => (
+              <FeedbackCard
+                key={feedback.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <FeedbackHeader>
+                  <FeedbackName>{feedback.name}</FeedbackName>
+                  <FeedbackTime>
+                    {new Date(feedback.timestamp).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </FeedbackTime>
+                </FeedbackHeader>
+                <FeedbackSubject>{feedback.subject}</FeedbackSubject>
+                <FeedbackMessage>{feedback.message}</FeedbackMessage>
+              </FeedbackCard>
+            ))}
+          </FeedbackList>
+        </ContentLayout>
       </PageContainer>
     </motion.div>
   );
