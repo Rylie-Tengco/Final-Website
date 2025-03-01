@@ -166,14 +166,14 @@ function ITExperience() {
     {
       id: 3,
       company: "Game Development",
-      duration: "2024 - Present",
+      duration: "2024",
       role: "Developer",
-      techStack: ["", "", "", "", ""],
+      techStack: ["Java", "Python", "AI"],
       responsibilities: [
-        "",
-        "",
-        "",
-        ""
+        "Prototyped Math Games with Python",
+        "Implemented Advanced Logic in Python:",
+        "Enhanced Difficulty Levels Using Python-Based AI",
+        "Analyzed Game Data for Continuous Improvement"
       ]
     }
   ];
