@@ -9,10 +9,11 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #264653;
+  color: #E0F4FF;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const ExperienceContainer = styled.div`
@@ -22,11 +23,12 @@ const ExperienceContainer = styled.div`
 `;
 
 const ExperienceCard = styled(motion.div)`
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   padding: 2rem;
   margin-bottom: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
   cursor: pointer;
   transition: transform 0.3s ease;
 
@@ -49,7 +51,7 @@ const CompanyHeader = styled.div`
 `;
 
 const CompanyName = styled.h3`
-  color: #264653;
+  color: #1A1B2F;
   font-size: 1.5rem;
   margin: 0;
 `;
@@ -60,7 +62,7 @@ const Duration = styled.span`
 `;
 
 const Role = styled.h4`
-  color: #2B2D42;
+  color: #1A1B2F;
   margin-bottom: 1rem;
   font-size: 1.2rem;
 `;
@@ -74,7 +76,7 @@ const TechStack = styled.div`
 
 const TechTag = styled.span`
   background: #E9C46A;
-  color: #264653;
+  color: #1A1B2F;
   padding: 0.3rem 0.8rem;
   border-radius: 15px;
   font-size: 0.9rem;
@@ -83,7 +85,7 @@ const TechTag = styled.span`
 
 const Details = styled(motion.div)`
   margin-top: 1rem;
-  color: #2B2D42;
+  color: #1A1B2F;
   line-height: 1.6;
 `;
 
@@ -94,6 +96,7 @@ const Responsibilities = styled.ul`
 
 const Responsibility = styled.li`
   margin-bottom: 0.5rem;
+  color: #1A1B2F;
 `;
 
 const pageTransition = {

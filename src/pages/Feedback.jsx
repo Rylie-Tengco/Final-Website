@@ -9,19 +9,21 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #264653;
+  color: #E0F4FF;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const FormContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
 `;
 
 const Form = styled.form`
@@ -37,35 +39,39 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  color: #264653;
+  color: #1A1B2F;
   font-weight: 500;
 `;
 
 const Input = styled.input`
   padding: 0.8rem;
-  border: 2px solid #E9E9E9;
+  border: 2px solid rgba(41, 41, 41, 0.2);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
 
   &:focus {
     outline: none;
     border-color: #2A9D8F;
+    background: rgba(255, 255, 255, 0.95);
   }
 `;
 
 const TextArea = styled.textarea`
   padding: 0.8rem;
-  border: 2px solid #E9E9E9;
+  border: 2px solid rgba(41, 41, 41, 0.2);
   border-radius: 4px;
   font-size: 1rem;
   min-height: 150px;
   resize: vertical;
   transition: border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
 
   &:focus {
     outline: none;
     border-color: #2A9D8F;
+    background: rgba(255, 255, 255, 0.95);
   }
 `;
 
@@ -80,11 +86,11 @@ const Button = styled.button`
   transition: background 0.3s ease;
 
   &:hover {
-    background: #264653;
+    background: #1A1B2F;
   }
 
   &:disabled {
-    background: #cccccc;
+    background: rgba(204, 204, 204, 0.8);
     cursor: not-allowed;
   }
 `;
@@ -98,12 +104,61 @@ const Message = styled(motion.div)`
   text-align: center;
 `;
 
-const ErrorText = styled.span`
-  color: #E76F51;
+const FeedbackList = styled.div`
+  max-width: 800px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const FeedbackCard = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+`;
+
+const FeedbackHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 0.5rem;
+`;
+
+const FeedbackName = styled.h3`
+  color: #1A1B2F;
+  margin: 0;
+  font-size: 1.1rem;
+`;
+
+const FeedbackTime = styled.span`
+  color: #666;
   font-size: 0.9rem;
 `;
 
+const FeedbackSubject = styled.h4`
+  color: #2A9D8F;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+`;
+
+const FeedbackMessage = styled.p`
+  color: #333;
+  margin: 0;
+  line-height: 1.5;
+`;
+
+const ErrorText = styled.span`
+  color: #E76F51;
+  font-size: 0.9rem;
+  font-weight: 500;
+`;
+
 function Feedback() {
+  const [feedbacks, setFeedbacks] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -162,9 +217,15 @@ function Feedback() {
 
     setIsSubmitting(true);
     
-    // Simulating an API call
+    // Add new feedback to the list
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const newFeedback = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        id: Date.now()
+      };
+      
+      setFeedbacks(prev => [newFeedback, ...prev]);
       setSubmitStatus('success');
       setFormData({
         name: '',
@@ -178,6 +239,7 @@ function Feedback() {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <motion.div
@@ -259,6 +321,31 @@ function Feedback() {
             </Message>
           )}
         </FormContainer>
+
+        <FeedbackList>
+          {feedbacks.map((feedback) => (
+            <FeedbackCard
+              key={feedback.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FeedbackHeader>
+                <FeedbackName>{feedback.name}</FeedbackName>
+                <FeedbackTime>
+                  {new Date(feedback.timestamp).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </FeedbackTime>
+              </FeedbackHeader>
+              <FeedbackSubject>{feedback.subject}</FeedbackSubject>
+              <FeedbackMessage>{feedback.message}</FeedbackMessage>
+            </FeedbackCard>
+          ))}
+        </FeedbackList>
       </PageContainer>
     </motion.div>
   );

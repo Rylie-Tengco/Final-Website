@@ -8,10 +8,11 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #264653;
+  color: #E0F4FF;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const HobbiesGrid = styled.div`
@@ -22,9 +23,10 @@ const HobbiesGrid = styled.div`
 `;
 
 const HobbyCard = styled(motion.div)`
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
   overflow: hidden;
   transition: transform 0.3s ease;
 
@@ -48,14 +50,16 @@ const HobbyContent = styled.div`
 `;
 
 const HobbyTitle = styled.h3`
-  color: #264653;
+  color: #1A1B2F;
   margin-bottom: 1rem;
   font-size: 1.5rem;
+  text-align: center;
 `;
 
 const HobbyDescription = styled.p`
-  color: #2B2D42;
+  color: #1A1B2F;
   line-height: 1.6;
+  text-align: justify;
 `;
 
 const pageTransition = {
@@ -74,32 +78,32 @@ function Hobbies() {
     {
       icon: '🎮',
       title: 'Gaming',
-      description: 'Enjoying both competitive and story-driven games, with a particular interest in strategy and RPG genres.'
+      description: 'Passionate about gacha games including Genshin Impact, Wuthering Waves, Honkai Star Rail, and Zenless Zone Zero. Also enjoy competitive gaming with titles like Valorant and Mobile Legends.'
     },
     {
       icon: '📚',
       title: 'Reading',
-      description: 'Reading technical books, science fiction, and personal development literature to expand knowledge and imagination.'
+      description: 'Avid reader of manga and manhwa, with particular interest in series like Omniscient Reader\'s Viewpoint, Solo Leveling, The Beginning After The End, and many other captivating stories.'
     },
     {
-      icon: '🏃',
-      title: 'Running',
-      description: 'Regular jogging and participating in local marathons to maintain physical fitness and mental clarity.'
+      icon: '📺',
+      title: 'Watching',
+      description: 'Enthusiastic about anime, particularly action series like Bleach and romance like Love is War. Also enjoy exploring movies across various genres for diverse entertainment.'
     },
     {
-      icon: '🎸',
-      title: 'Music',
-      description: 'Playing guitar and exploring different music genres in free time to unwind and express creativity.'
+      icon: '🏋️',
+      title: 'Exercise',
+      description: 'Dedicated to maintaining a healthy lifestyle through regular workouts in my spare time. Following a structured workout plan to keep my body in shape and maintain optimal health.'
     },
     {
-      icon: '✈️',
-      title: 'Traveling',
-      description: 'Exploring new places, experiencing different cultures, and documenting journeys through photography.'
+      icon: '🏐',
+      title: 'Volleyball',
+      description: 'Passionate about playing volleyball whenever the opportunity arises. Enjoy the thrill of the game, especially when playing with friends, combining friendly competition with social interaction.'
     },
     {
-      icon: '👨‍🍳',
-      title: 'Cooking',
-      description: 'Experimenting with recipes from various cuisines and perfecting cooking techniques.'
+      icon: '🔧',
+      title: 'Tinkering',
+      description: 'Enjoy tinkering with devices and gadgets, exploring their mechanics, and finding ways to improve or repair them. Each hands-on experience is a learning opportunity.'
     }
   ];
 

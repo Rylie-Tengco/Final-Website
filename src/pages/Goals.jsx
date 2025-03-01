@@ -8,10 +8,11 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #264653;
+  color: #1E3D59;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const GoalsContainer = styled.div`
@@ -22,10 +23,11 @@ const GoalsContainer = styled.div`
 `;
 
 const GoalCard = styled(motion.div)`
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
 `;
 
 const GoalHeader = styled.div`
@@ -42,7 +44,7 @@ const GoalHeader = styled.div`
 `;
 
 const GoalTitle = styled.h3`
-  color: #264653;
+  color: #1A1B2F;
   font-size: 1.5rem;
   margin: 0;
 `;
@@ -67,14 +69,14 @@ const Progress = styled.div`
 `;
 
 const ProgressLabel = styled.div`
-  color: #264653;
+  color: #1A1B2F;
   font-size: 0.9rem;
   text-align: right;
   margin-top: 0.5rem;
 `;
 
 const GoalDescription = styled.p`
-  color: #2B2D42;
+  color: #1A1B2F;
   line-height: 1.6;
   margin-bottom: 1rem;
 `;
@@ -86,7 +88,7 @@ const GoalMilestones = styled.ul`
 `;
 
 const Milestone = styled.li`
-  color: #2B2D42;
+  color: #1A1B2F;
   margin: 0.5rem 0;
   padding-left: 1.5rem;
   position: relative;
@@ -95,7 +97,7 @@ const Milestone = styled.li`
     content: '${props => props.completed ? '✓' : '○'}';
     position: absolute;
     left: 0;
-    color: ${props => props.completed ? '#2A9D8F' : '#264653'};
+    color: ${props => props.completed ? '#2A9D8F' : '#1A1B2F'};
   }
 `;
 

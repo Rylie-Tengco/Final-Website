@@ -1,61 +1,71 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
+import profilePicture from '../images/Profile Picture.jpeg';
 
 const PageContainer = styled.div`
-  max-width: 1200px;
+  max-width: min(1200px, 90vw);
   margin: 0 auto;
-  padding: 2rem;
+  padding: clamp(1rem, 3vw, 2rem);
 `;
 
 const Title = styled.h1`
-  color: #264653;
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
+  color: #1E3D59;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+  font-size: clamp(2rem, 5vw, 2.5rem);
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const ContentSection = styled.section`
-  background: white;
-  padding: 2rem;
+  background: rgba(255, 255, 255, 0.8);
+  padding: clamp(1.5rem, 4vw, 2rem);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const ProfileContainer = styled.div`
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 2rem;
+  backdrop-filter: blur(5px);
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    text-align: center;
+    padding: 1.25rem;
   }
 `;
 
-const ProfileImage = styled.div`
-  width: 200px;
-  height: 200px;
+const ProfileContainer = styled.div`
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2rem);
+  align-items: start;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+  grid-template-columns: minmax(150px, 200px) 1fr;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+`;
+
+const ProfileImage = styled.img`
+  width: clamp(150px, 30vw, 200px);
+  height: clamp(150px, 30vw, 200px);
   border-radius: 50%;
-  background: #E9C46A;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 4rem;
-  color: #264653;
+  object-fit: cover;
+  object-position: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const ProfileInfo = styled.div`
-  flex: 1;
-  min-width: 300px;
+  max-width: 65ch;
+  margin: 0 auto;
 `;
 
 const Bio = styled.p`
   line-height: 1.6;
-  color: #2B2D42;
-  margin-bottom: 1rem;
+  color: #1A1B2F;
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 `;
 
 const pageTransition = {
@@ -77,7 +87,7 @@ function AboutMe() {
         <Title>About Me</Title>
         <ContentSection>
           <ProfileContainer>
-            <ProfileImage>👤</ProfileImage>
+          <ProfileImage src={profilePicture} alt="Profile" loading="lazy" />
             <ProfileInfo>
               <Bio>
                 Hello! I'm [Your Name], a passionate software developer with a keen interest
