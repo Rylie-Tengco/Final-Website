@@ -12,7 +12,10 @@ const Title = styled.h1`
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3),
+               0 0 10px rgba(255, 255, 255, 0.5),
+               0 0 20px rgba(255, 255, 255, 0.3);
+  margin-top: ${props => props.first ? '0' : '3rem'};
 `;
 
 const GoalsContainer = styled.div`
@@ -113,7 +116,7 @@ const cardVariants = {
 };
 
 function Goals() {
-  const goals = [
+  const professionalGoals = [
     {
       title: "Master Full-Stack Development",
       progress: 75,
@@ -149,6 +152,42 @@ function Goals() {
     }
   ];
 
+  const personalGoals = [
+    {
+      title: "Finish My Manga and Manhwa Read-list",
+      progress: 20,
+      description: "Catching up on beloved series, discovering new titles, and conquering a growing backlog to fully enjoy captivating stories and art.",
+      milestones: [
+        { text: "Explore different genres to broaden my horizons", completed: true },
+        { text: "Stay updated with latest chapter releases", completed: true },
+        { text: "Keep a dedicated reading schedule each week", completed: false },
+        { text: "Write brief reviews or impressions for each series", completed: false }
+      ]
+    },
+    {
+      title: "Get My Dream Body",
+      progress: 15,
+      description: "Building a healthier, stronger physique through consistent workouts, balanced nutrition, and sustainable lifestyle changes.",
+      milestones: [
+        { text: "Establish a structured workout routine", completed: true },
+        { text: "Focus on proper nutrition and meal planning", completed: false },
+        { text: "Track progress with measurements and photos", completed: false },
+        { text: "Incorporate rest days and recovery practices", completed: false }
+      ]
+    },
+    {
+      title: "Get My Wished Characters in Gacha Games",
+      progress: 45,
+      description: "Strategically saving resources, planning summon schedules, and honing in-game strategies to collect all the characters on my wishlist.",
+      milestones: [
+        { text: "Research upcoming banners and plan pulls wisely", completed: true },
+        { text: "Manage in-game currency effectively", completed: true },
+        { text: "Participate in events for bonus rewards", completed: true },
+        { text: "Obtain Every Desired Character", completed: false }
+      ]
+    }
+  ];
+
   return (
     <motion.div
       initial="initial"
@@ -158,9 +197,38 @@ function Goals() {
       transition={{ duration: 0.3 }}
     >
       <PageContainer>
-        <Title>Professional Goals</Title>
+        <Title first>Professional Goals</Title>
         <GoalsContainer>
-          {goals.map((goal, index) => (
+          {professionalGoals.map((goal, index) => (
+            <GoalCard
+              key={index}
+              variants={cardVariants}
+              transition={{ delay: index * 0.1 }}
+            >
+              <GoalHeader>
+                <GoalTitle>{goal.title}</GoalTitle>
+                <ProgressContainer>
+                  <ProgressBar>
+                    <Progress value={goal.progress} />
+                  </ProgressBar>
+                  <ProgressLabel>{goal.progress}% Complete</ProgressLabel>
+                </ProgressContainer>
+              </GoalHeader>
+              <GoalDescription>{goal.description}</GoalDescription>
+              <GoalMilestones>
+                {goal.milestones.map((milestone, idx) => (
+                  <Milestone key={idx} completed={milestone.completed}>
+                    {milestone.text}
+                  </Milestone>
+                ))}
+              </GoalMilestones>
+            </GoalCard>
+          ))}
+        </GoalsContainer>
+
+        <Title>Personal Goals</Title>
+        <GoalsContainer>
+          {personalGoals.map((goal, index) => (
             <GoalCard
               key={index}
               variants={cardVariants}

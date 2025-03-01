@@ -13,7 +13,9 @@ const Title = styled.h1`
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3),
+               0 0 10px rgba(255, 255, 255, 0.5),
+               0 0 20px rgba(255, 255, 255, 0.3);
 `;
 
 const ExperienceContainer = styled.div`

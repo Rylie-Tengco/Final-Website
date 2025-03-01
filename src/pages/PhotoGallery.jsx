@@ -27,7 +27,9 @@ const Title = styled.h1`
   margin-bottom: clamp(1.5rem, 4vw, 2rem);
   font-size: clamp(2rem, 5vw, 2.5rem);
   text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3),
+               0 0 10px rgba(255, 255, 255, 0.5),
+               0 0 20px rgba(255, 255, 255, 0.3);
 `;
 
 const GalleryGrid = styled.div`
