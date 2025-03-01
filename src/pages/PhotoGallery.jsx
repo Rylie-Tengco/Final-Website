@@ -23,7 +23,7 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #E0F4FF;
+  color: #1E3D59;
   margin-bottom: clamp(1.5rem, 4vw, 2rem);
   font-size: clamp(2rem, 5vw, 2.5rem);
   text-align: center;

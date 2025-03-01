@@ -36,7 +36,7 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #E0F4FF;
+  color: #1E3D59;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
@@ -62,7 +62,7 @@ const Canvas = styled.canvas`
 
 const Score = styled.div`
   font-size: 2rem;
-  color: #E0F4FF;
+  color: #1E3D59;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 `;

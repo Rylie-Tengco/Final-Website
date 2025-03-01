@@ -9,7 +9,7 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  color: #E0F4FF;
+  color: #1E3D59;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-align: center;
