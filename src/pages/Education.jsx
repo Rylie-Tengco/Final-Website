@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
+import mcaLogo from '../images/mca logo.png';
+import apcLogo from '../images/apc logo.png';
+
 const PageContainer = styled.div`
   max-width: min(1200px, 90vw);
   margin: 0 auto;
@@ -68,6 +71,9 @@ const TimelineContent = styled.div`
   margin: 0 clamp(1rem, 3vw, 2rem);
   position: relative;
   transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 
   &:hover {
     transform: translateY(-2px);
@@ -91,6 +97,30 @@ const TimelineContent = styled.div`
       width: 14px;
       height: 14px;
     }
+  }
+`;
+
+const TextContent = styled.div`
+  flex: 1;
+`;
+
+const LogoContainer = styled.div`
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid #2A9D8F;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
   }
 `;
 
@@ -130,25 +160,29 @@ function Education() {
       year: "2011 - 2017",
       institution: "Maranatha Christian Academy",
       description: "Elementary Education",
-      align: "left"
+      align: "left",
+      logo: mcaLogo
     },
     {
       year: "2017 - 2021",
       institution: "Maranatha Christian Academy",
       description: "Highschool Education",
-      align: "right"
+      align: "right",
+      logo: mcaLogo
     },
     {
       year: "2021 - 2023",
       institution: "Maranatha Christian Academy",
       description: "Senior Highschool - STEM Strand",
-      align: "left"
+      align: "left",
+      logo: mcaLogo
     },
     {
       year: "2023 - Present",
       institution: "Asia Pacific College",
       description: "Bachelor of Science in Information Technology - Mobile and Internet",
-      align: "right"
+      align: "right",
+      logo: apcLogo
     }
   ];
 
@@ -172,9 +206,14 @@ function Education() {
               transition={{ delay: index * 0.2 }}
             >
               <TimelineContent align={item.align}>
-                <Year>{item.year}</Year>
-                <Institution>{item.institution}</Institution>
-                <Description>{item.description}</Description>
+                <TextContent>
+                  <Year>{item.year}</Year>
+                  <Institution>{item.institution}</Institution>
+                  <Description>{item.description}</Description>
+                </TextContent>
+                <LogoContainer>
+                  <img src={item.logo} alt={item.institution} />
+                </LogoContainer>
               </TimelineContent>
             </TimelineItem>
           ))}
