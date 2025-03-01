@@ -10,6 +10,22 @@ const NavContainer = styled.nav`
   background: #1a2f38;
   padding: 1rem;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const BrandTitle = styled.h1`
+  color: #F8F9FA;
+  font-size: 1.5rem;
+  margin: 0;
+  padding-left: 1rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const NavList = styled.ul`
@@ -19,12 +35,14 @@ const NavList = styled.ul`
   list-style: none;
   gap: 2rem;
   flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
 
   @media (max-width: 768px) {
     display: ${props => props.isOpen ? 'flex' : 'none'};
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem 0;
+    gap: 0;
+    padding: 0;
     background: #1a2f38;
     position: absolute;
     top: 100%;
@@ -60,9 +78,25 @@ const NavItem = styled.li`
     border-radius: 4px;
     transition: all 0.3s ease;
     background: ${props => props.active ? '#2A9D8F' : 'transparent'};
+    display: block;
 
     &:hover {
       background: #2A9D8F;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    a {
+      padding: 1rem;
+      border-radius: 0;
+      text-align: left;
     }
   }
 `;
@@ -106,6 +140,7 @@ function Navbar() {
 
   return (
     <NavContainer>
+      <BrandTitle>Rylie Tengco</BrandTitle>
       {isMobile && (
         <HamburgerButton onClick={toggleMenu} aria-label="Toggle menu">
           {isOpen ? '✕' : '☰'}

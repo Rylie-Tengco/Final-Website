@@ -106,6 +106,32 @@ const pageTransition = {
   animate: { opacity: 1 },
   exit: { opacity: 0 }
 };
+const FeedbackList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc((150px + 1rem) * 4); /* Height for 4 cards plus gaps */
+  overflow-y: auto;
+  padding-right: 1rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #2A9D8F;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #1A1B2F;
+  }
+`;
 
 function ITExperience() {
   const [expandedId, setExpandedId] = useState(null);
@@ -139,7 +165,7 @@ function ITExperience() {
     },
     {
       id: 3,
-      company: "",
+      company: "Game Development",
       duration: "2024 - Present",
       role: "Developer",
       techStack: ["", "", "", "", ""],

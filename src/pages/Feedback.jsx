@@ -120,7 +120,7 @@ const FeedbackList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-height: 800px;
+  max-height: calc((150px + 1rem) * 4); /* Height for 4 cards plus gaps */
   overflow-y: auto;
   padding-right: 1rem;
 
@@ -208,9 +208,7 @@ function Feedback() {
       newErrors.name = 'Name is required';
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
 

@@ -105,6 +105,7 @@ const Instructions = styled.div`
   p {
     color: #1A1B2F;
     line-height: 1.6;
+    text-align: justify;
   }
 `;
 

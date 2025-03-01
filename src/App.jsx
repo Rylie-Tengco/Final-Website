@@ -1,6 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import backgroundVideo from './background/background.mp4';
 import AboutMe from './pages/AboutMe';
@@ -11,6 +12,16 @@ import ITExperience from './pages/ITExperience';
 import PhotoGallery from './pages/PhotoGallery';
 import Minigame from './pages/Minigame';
 import Feedback from './pages/Feedback';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 const globalStyles = css`
   * {
@@ -102,6 +113,7 @@ function App() {
           <source src={backgroundVideo} type="video/mp4" />
         </VideoBackground>
         <Navbar />
+        <ScrollToTop />
         <ContentWrapper>
           <Routes>
             <Route path="/" element={<AboutMe />} />
