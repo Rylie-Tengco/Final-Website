@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
+import { useEffect, useState, createContext } from 'react';
+import selfLoveMusic from './music/Self Love.mp3';
 import Navbar from './components/Navbar';
 import backgroundVideo from './background/background.mp4';
 import AboutMe from './pages/AboutMe';
@@ -104,30 +105,50 @@ const ContentWrapper = styled.main`
   }
 `;
 
+export const AudioContext = createContext();
+
 function App() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [audioElement, setAudioElement] = useState(null);
+
+  useEffect(() => {
+    const audio = new Audio(selfLoveMusic);
+    audio.loop = true;
+    audio.volume = volume;
+    setAudioElement(audio);
+
+    return () => {
+      audio.pause();
+      audio.src = '';
+    };
+  }, []);
+
   return (
-    <Router>
-      <Global styles={globalStyles} />
-      <MainContainer>
-        <VideoBackground autoPlay loop muted playsInline>
-          <source src={backgroundVideo} type="video/mp4" />
-        </VideoBackground>
-        <Navbar />
-        <ScrollToTop />
-        <ContentWrapper>
-          <Routes>
-            <Route path="/" element={<AboutMe />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/hobbies" element={<Hobbies />} />
-            <Route path="/goals" element={<Goals />} />
-            <Route path="/experience" element={<ITExperience />} />
-            <Route path="/gallery" element={<PhotoGallery />} />
-            <Route path="/minigame" element={<Minigame />} />
-            <Route path="/feedback" element={<Feedback />} />
-          </Routes>
-        </ContentWrapper>
-      </MainContainer>
-    </Router>
+    <AudioContext.Provider value={{ audioElement, isPlaying, setIsPlaying, volume, setVolume }}>
+      <Router>
+        <Global styles={globalStyles} />
+        <MainContainer>
+          <VideoBackground autoPlay loop muted playsInline>
+            <source src={backgroundVideo} type="video/mp4" />
+          </VideoBackground>
+          <Navbar />
+          <ScrollToTop />
+          <ContentWrapper>
+            <Routes>
+              <Route path="/" element={<AboutMe />} />
+              <Route path="/education" element={<Education />} />
+              <Route path="/hobbies" element={<Hobbies />} />
+              <Route path="/goals" element={<Goals />} />
+              <Route path="/experience" element={<ITExperience />} />
+              <Route path="/gallery" element={<PhotoGallery />} />
+              <Route path="/minigame" element={<Minigame />} />
+              <Route path="/feedback" element={<Feedback />} />
+            </Routes>
+          </ContentWrapper>
+        </MainContainer>
+      </Router>
+    </AudioContext.Provider>
   );
 }
 

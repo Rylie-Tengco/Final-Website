@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import profilePicture from '../images/Profile Picture.jpeg';
-import selfLoveMusic from '../music/Self Love.mp3';
+import { AudioContext } from '../App';
 
 const PageContainer = styled.div`
   max-width: min(1200px, 90vw);
@@ -26,39 +26,38 @@ const ContentSection = styled.section`
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
+  max-width: 800px;
+  margin: 0 auto;
 
   @media (max-width: 768px) {
     padding: 1.25rem;
+    max-width: 95%;
   }
 `;
 
 const ProfileContainer = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: clamp(1.5rem, 4vw, 2rem);
-  align-items: start;
   margin-bottom: clamp(1.5rem, 4vw, 2rem);
-  grid-template-columns: minmax(150px, 200px) 1fr;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    text-align: center;
-    gap: 1.5rem;
-  }
+  width: 100%;
 `;
 
 const ProfileImage = styled.img`
-  width: clamp(150px, 30vw, 200px);
-  height: clamp(150px, 30vw, 200px);
+  width: clamp(200px, 35vw, 250px);
+  height: clamp(200px, 35vw, 250px);
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
 `;
 
 const ProfileInfo = styled.div`
   max-width: 65ch;
   margin: 0 auto;
+  width: 100%;
 `;
 
 const Bio = styled.p`
@@ -66,6 +65,7 @@ const Bio = styled.p`
   color: #1A1B2F;
   margin-bottom: clamp(0.75rem, 2vw, 1rem);
   font-size: clamp(0.9rem, 2vw, 1rem);
+  text-align: justify;
   
   &:last-of-type {
     margin-bottom: 0;
@@ -79,10 +79,9 @@ const AudioPlayer = styled.div`
   background: rgba(42, 157, 143, 0.1);
   padding: 0.75rem;
   border-radius: 8px;
-  margin-top: 1rem;
-  width: 100%;
+  margin: 1rem 0 2rem;
+  width: min(100%, 400px);
 `;
-
 const PlayButton = styled.button`
   background: #2A9D8F;
   color: white;
@@ -186,35 +185,32 @@ const pageTransition = {
 };
 
 function AboutMe() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { audioElement, isPlaying, setIsPlaying, volume, setVolume } = useContext(AudioContext);
   const [progress, setProgress] = useState(0);
   const [showVolume, setShowVolume] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const audioRef = useRef(null);
   const progressBarRef = useRef(null);
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    if (!audioElement) return;
 
     const updateProgress = () => {
       const value = (audio.currentTime / audio.duration) * 100;
       setProgress(isNaN(value) ? 0 : value);
     };
 
-    audio.addEventListener('timeupdate', updateProgress);
-    return () => audio.removeEventListener('timeupdate', updateProgress);
+    audioElement.addEventListener('timeupdate', updateProgress);
+    return () => audioElement.removeEventListener('timeupdate', updateProgress);
   }, []);
 
   const togglePlay = (e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (audioRef.current.paused) {
-      audioRef.current.play();
+    if (audioElement.paused) {
+      audioElement.play();
       setIsPlaying(true);
     } else {
-      audioRef.current.pause();
+      audioElement.pause();
       setIsPlaying(false);
     }
   };
@@ -222,13 +218,13 @@ function AboutMe() {
   const handleProgressClick = (e) => {
     const bounds = progressBarRef.current.getBoundingClientRect();
     const percent = (e.clientX - bounds.left) / bounds.width;
-    audioRef.current.currentTime = percent * audioRef.current.duration;
+    audioElement.currentTime = percent * audioElement.duration;
   };
 
   const handleVolumeChange = (e) => {
     const value = e.target.value;
     setVolume(value);
-    audioRef.current.volume = value;
+    audioElement.volume = value;
   };
 
   return (
@@ -243,36 +239,34 @@ function AboutMe() {
         <Title>About Me</Title>
         <ContentSection>
           <ProfileContainer>
-            <div>
-              <ProfileImage src={profilePicture} alt="Profile" loading="lazy" />
-              <AudioPlayer>
-                <audio ref={audioRef} src={selfLoveMusic} preload="metadata" />
-                <PlayButton onClick={togglePlay}>
-                  {isPlaying ? '⏸' : '▶'}
-                </PlayButton>
-                <ProgressBar ref={progressBarRef} onClick={handleProgressClick}>
-                  <Progress width={progress} />
-                </ProgressBar>
-                <VolumeContainer 
-                  onMouseEnter={() => setShowVolume(true)}
-                  onMouseLeave={() => setShowVolume(false)}
-                >
-                  <VolumeButton>
-                    {volume > 0 ? '🔊' : '🔇'}
-                  </VolumeButton>
-                  <VolumeSlider show={showVolume}>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={volume}
-                      onChange={handleVolumeChange}
-                    />
-                  </VolumeSlider>
-                </VolumeContainer>
-              </AudioPlayer>
-            </div>
+            <ProfileImage src={profilePicture} alt="Profile" loading="lazy" />
+            <AudioPlayer>
+
+              <PlayButton onClick={togglePlay}>
+                {isPlaying ? '⏸' : '▶'}
+              </PlayButton>
+              <ProgressBar ref={progressBarRef} onClick={handleProgressClick}>
+                <Progress width={progress} />
+              </ProgressBar>
+              <VolumeContainer 
+                onMouseEnter={() => setShowVolume(true)}
+                onMouseLeave={() => setShowVolume(false)}
+              >
+                <VolumeButton>
+                  {volume > 0 ? '🔊' : '🔇'}
+                </VolumeButton>
+                <VolumeSlider show={showVolume}>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={volume}
+                    onChange={handleVolumeChange}
+                  />
+                </VolumeSlider>
+              </VolumeContainer>
+            </AudioPlayer>
             <ProfileInfo>
               <Bio>
                 Hello! I'm [Your Name], a passionate software developer with a keen interest
