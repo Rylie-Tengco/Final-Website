@@ -795,6 +795,8 @@ const SnakeGame = ({ setScore, gameStarted, setGameStarted, gameOver, setGameOve
   );
 };
 
+import Photobooth from '../components/Photobooth';
+
 function Minigame() {
   const [selectedGame, setSelectedGame] = useState('snake');
   const [score, setScore] = useState(0);
@@ -837,9 +839,15 @@ function Minigame() {
           >
             Block Run
           </GameButton>
+          <GameButton 
+            active={selectedGame === 'photobooth'} 
+            onClick={() => handleGameSelect('photobooth')}
+          >
+            Photobooth
+          </GameButton>
         </GameSelector>
 
-        <Score>Score: {score}</Score>
+        {selectedGame !== 'photobooth' && <Score>Score: {score}</Score>}
 
         {selectedGame === 'snake' ? (
           <SnakeGame
@@ -857,7 +865,7 @@ function Minigame() {
             gameOver={gameOver}
             setGameOver={setGameOver}
           />
-        ) : (
+        ) : selectedGame === 'dino' ? (
           <DinoRun
             setScore={setScore}
             gameStarted={gameStarted}
@@ -865,6 +873,10 @@ function Minigame() {
             gameOver={gameOver}
             setGameOver={setGameOver}
           />
+        ) : selectedGame === 'photobooth' ? (
+          <Photobooth />
+        ) : (
+          <div>Unknown game selected</div>
         )}
 
         <Instructions>
@@ -881,6 +893,13 @@ function Minigame() {
               Press spacebar or tap the screen to make the ball jump.
               Navigate through the barriers to score points.
               Avoid hitting the barriers or the ground!
+            </p>
+          ) : selectedGame === 'photobooth' ? (
+            <p>
+              Click "Start Photobooth" to activate your camera. Once ready, click "Take Photos" 
+              to start a sequence of 4 photos. A 3-second countdown will appear before each photo. 
+              After all photos are taken, a photo strip will be generated automatically. 
+              You can then download your photo strip as a keepsake!
             </p>
           ) : (
             <p>
