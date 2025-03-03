@@ -382,7 +382,7 @@ function AboutMe() {
             </AudioPlayer>
             <ProfileInfo>
               <Bio>
-                Hello! I'm Julian Rylie B. Tengco, a 20-year-old aspiring IT student
+                Hello! I'm Julian Rylie B. Tengco, a 20-year-old aspiring IT technician
                 born on November 23, 2004. As the eldest of four brothers, I've developed
                 a natural sense of leadership and responsibility that carries over into my
                 professional endeavors.
