@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 const PageContainer = styled.div`
   max-width: 1200px;
@@ -196,6 +198,39 @@ function Feedback() {
     subject: '',
     message: ''
   });
+  useEffect(() => {
+    // Fetch existing feedbacks
+    fetchFeedbacks();
+
+    // Subscribe to real-time changes
+    const channel = supabase
+      .channel('public:feedbacks')
+      .on('postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'feedbacks' },
+        (payload) => {
+          setFeedbacks(currentFeedbacks => [payload.new, ...currentFeedbacks]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchFeedbacks = async () => {
+    const { data, error } = await supabase
+      .from('feedbacks')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching feedbacks:', error);
+      return;
+    }
+
+    setFeedbacks(data || []);
+  };
 
   const [errors, setErrors] = useState({});
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -246,15 +281,21 @@ function Feedback() {
 
     setIsSubmitting(true);
     
-    // Add new feedback to the list
     try {
-      const newFeedback = {
-        ...formData,
-        timestamp: new Date().toISOString(),
-        id: Date.now()
-      };
-      
-      setFeedbacks(prev => [newFeedback, ...prev]);
+      const { data, error } = await supabase
+        .from('feedbacks')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            subject: formData.subject,
+            message: formData.message,
+            created_at: new Date().toISOString()
+          }
+        ]);
+
+      if (error) throw error;
+
       setSubmitStatus('success');
       setFormData({
         name: '',
@@ -263,6 +304,7 @@ function Feedback() {
         message: ''
       });
     } catch (error) {
+      console.error('Error submitting feedback:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -364,7 +406,7 @@ function Feedback() {
                 <FeedbackHeader>
                   <FeedbackName>{feedback.name}</FeedbackName>
                   <FeedbackTime>
-                    {new Date(feedback.timestamp).toLocaleDateString('en-US', {
+                    {new Date(feedback.created_at).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'
