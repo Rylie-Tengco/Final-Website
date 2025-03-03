@@ -20,6 +20,7 @@ const CameraView = styled.video`
   max-width: 400px;
   border-radius: 8px;
   border: 2px solid #1A1B2F;
+  transform: scaleX(-1);
 `;
 
 const Button = styled.button`
@@ -105,7 +106,15 @@ const Photobooth = () => {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
+    
+    // Mirror the context horizontally
+    ctx.scale(-1, 1);
+    ctx.translate(-canvas.width, 0);
     ctx.drawImage(video, 0, 0);
+    
+    // Reset transformation
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    
     return canvas.toDataURL('image/jpeg');
   }, []);
 
