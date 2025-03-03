@@ -128,7 +128,11 @@ const Photobooth = () => {
     canvas.width = photoWidth + (padding * 2);
     canvas.height = (photoHeight * 4) + (padding * 5);
     
-    ctx.fillStyle = 'white';
+    // Create a blue gradient background
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, 'rgba(200, 230, 255, 0.95)');
+    gradient.addColorStop(1, 'rgba(160, 210, 255, 0.95)');
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     photosRef.current.forEach((photoUrl, index) => {
