@@ -156,6 +156,7 @@ const FeedbackCard = styled(motion.div)`
 const FeedbackHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding-bottom: 0.5rem;
@@ -165,13 +166,20 @@ const FeedbackName = styled.h3`
   color: #1A1B2F;
   margin: 0;
   font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  height: 100%;
 `;
 
 const FeedbackTime = styled.span`
   color: #666;
   font-size: 0.9rem;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.4;
 `;
-
 const FeedbackSubject = styled.h4`
   color: #2A9D8F;
   margin: 0 0 0.5rem 0;
@@ -410,6 +418,13 @@ function Feedback() {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'
+                    })}
+                    <br />
+                    {new Date(feedback.created_at).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: true
                     })}
                   </FeedbackTime>
                 </FeedbackHeader>
