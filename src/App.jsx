@@ -3,6 +3,11 @@ import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useEffect, useState, createContext } from 'react';
 import selfLoveMusic from './music/Self Love.mp3';
+import amIDreamingMusic from './music/Am I Dreaming.mp3';
+import callingMusic from './music/Calling.mp3';
+import linkUpMusic from './music/Link Up.mp3';
+import monaLisaMusic from './music/Mona Lisa.mp3';
+import sunflowerMusic from './music/Sunflower.mp3';
 import Navbar from './components/Navbar';
 import backgroundVideo from './background/background.mp4';
 import AboutMe from './pages/AboutMe';
@@ -107,25 +112,49 @@ const ContentWrapper = styled.main`
 
 export const AudioContext = createContext();
 
+const musicTracks = [
+  { src: selfLoveMusic, title: 'Self Love' },
+  { src: amIDreamingMusic, title: 'Am I Dreaming' },
+  { src: callingMusic, title: 'Calling' },
+  { src: linkUpMusic, title: 'Link Up' },
+  { src: monaLisaMusic, title: 'Mona Lisa' },
+  { src: sunflowerMusic, title: 'Sunflower' }
+];
+
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [audioElement, setAudioElement] = useState(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
 
   useEffect(() => {
-    const audio = new Audio(selfLoveMusic);
-    audio.loop = true;
+    const audio = new Audio(musicTracks[currentTrackIndex].src);
+    audio.loop = false;
     audio.volume = volume;
     setAudioElement(audio);
+
+    audio.addEventListener('ended', () => {
+      const nextIndex = (currentTrackIndex + 1) % musicTracks.length;
+      setCurrentTrackIndex(nextIndex);
+    });
 
     return () => {
       audio.pause();
       audio.src = '';
     };
-  }, []);
+  }, [currentTrackIndex]);
 
   return (
-    <AudioContext.Provider value={{ audioElement, isPlaying, setIsPlaying, volume, setVolume }}>
+    <AudioContext.Provider value={{
+      audioElement,
+      isPlaying,
+      setIsPlaying,
+      volume,
+      setVolume,
+      currentTrack: musicTracks[currentTrackIndex],
+      nextTrack: () => setCurrentTrackIndex((currentTrackIndex + 1) % musicTracks.length),
+      previousTrack: () => setCurrentTrackIndex((currentTrackIndex - 1 + musicTracks.length) % musicTracks.length)
+    }}>
       <Router>
         <Global styles={globalStyles} />
         <MainContainer>

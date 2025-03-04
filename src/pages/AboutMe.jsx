@@ -74,13 +74,20 @@ const Bio = styled.p`
 
 const AudioPlayer = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   background: rgba(42, 157, 143, 0.1);
   padding: 0.75rem;
   border-radius: 8px;
   margin: 1rem 0 2rem;
   width: min(100%, 400px);
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 `;
 const PlayButton = styled.button`
   background: #2A9D8F;
@@ -145,6 +152,13 @@ const VolumeButton = styled.button`
   &:hover {
     color: #1A1B2F;
   }
+`;
+
+const MusicName = styled.div`
+  color: #2A9D8F;
+  font-size: 0.9rem;
+  text-align: center;
+  font-weight: 500;
 `;
 
 const VolumeSlider = styled.div`
@@ -266,7 +280,7 @@ const pageTransition = {
 };
 
 function AboutMe() {
-  const { audioElement, isPlaying, setIsPlaying, volume, setVolume } = useContext(AudioContext);
+  const { audioElement, isPlaying, setIsPlaying, volume, setVolume, currentTrack, nextTrack, previousTrack } = useContext(AudioContext);
   const [progress, setProgress] = useState(0);
   const [showVolume, setShowVolume] = useState(false);
   const progressBarRef = useRef(null);
@@ -354,31 +368,37 @@ function AboutMe() {
               </SocialMediaLink>
             </SocialMediaContainer>
             <AudioPlayer>
-
-              <PlayButton onClick={togglePlay}>
-                {isPlaying ? '⏸' : '▶'}
-              </PlayButton>
-              <ProgressBar ref={progressBarRef} onClick={handleProgressClick}>
-                <Progress width={progress} />
-              </ProgressBar>
-              <VolumeContainer 
-                onMouseEnter={() => setShowVolume(true)}
-                onMouseLeave={() => setShowVolume(false)}
-              >
-                <VolumeButton>
-                  {volume > 0 ? '🔊' : '🔇'}
-                </VolumeButton>
-                <VolumeSlider show={showVolume}>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={volume}
-                    onChange={handleVolumeChange}
-                  />
-                </VolumeSlider>
-              </VolumeContainer>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%' }}>
+                <div className="controls">
+                  <PlayButton onClick={previousTrack}>⏮</PlayButton>
+                  <PlayButton onClick={togglePlay}>
+                    {isPlaying ? '⏸' : '▶'}
+                  </PlayButton>
+                  <PlayButton onClick={nextTrack}>⏭</PlayButton>
+                </div>
+                <ProgressBar ref={progressBarRef} onClick={handleProgressClick}>
+                  <Progress width={progress} />
+                </ProgressBar>
+                <VolumeContainer 
+                  onMouseEnter={() => setShowVolume(true)}
+                  onMouseLeave={() => setShowVolume(false)}
+                >
+                  <VolumeButton>
+                    {volume > 0 ? '🔊' : '🔇'}
+                  </VolumeButton>
+                  <VolumeSlider show={showVolume}>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={volume}
+                      onChange={handleVolumeChange}
+                    />
+                  </VolumeSlider>
+                </VolumeContainer>
+              </div>
+              <MusicName>{currentTrack.title}</MusicName>
             </AudioPlayer>
             <ProfileInfo>
               <Bio>
