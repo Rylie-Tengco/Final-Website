@@ -248,25 +248,23 @@ const ImageCaption = styled.div`
 const modalVariants = {
   hidden: { 
     opacity: 0, 
-    scale: 0.5,
-    y: 50
+    scale: 0.8
   },
   visible: { 
     opacity: 1, 
     scale: 1,
-    y: 0,
     transition: {
       type: "spring",
-      damping: 25,
-      stiffness: 300,
-      duration: 0.5
+      damping: window.innerWidth <= 768 ? 40 : 25,
+      stiffness: window.innerWidth <= 768 ? 400 : 300,
+      duration: window.innerWidth <= 768 ? 0.2 : 0.5
     }
   },
   exit: {
     opacity: 0,
-    scale: 0.9,
+    scale: 0.95,
     transition: {
-      duration: 0.3,
+      duration: window.innerWidth <= 768 ? 0.15 : 0.3,
       ease: "easeOut"
     }
   }
@@ -416,7 +414,7 @@ function PhotoGallery() {
                 onClick={(e) => e.stopPropagation()}
                 drag="x"
                 dragConstraints={dragConstraints}
-                dragElastic={0.7}
+                dragElastic={window.innerWidth <= 768 ? 0.4 : 0.7}
                 onDragEnd={(e, { offset, velocity }) => {
                   const swipe = offset.x;
                   if (Math.abs(swipe) >= swipeThreshold) {
@@ -429,7 +427,11 @@ function PhotoGallery() {
                 }}
                 animate={{
                   x: 0,
-                  transition: { type: "spring", stiffness: 300, damping: 30 }
+                  transition: { 
+                    type: "spring", 
+                    stiffness: window.innerWidth <= 768 ? 400 : 300, 
+                    damping: window.innerWidth <= 768 ? 40 : 30 
+                  }
                 }}
                 whileDrag={{
                   scale: 0.95,
