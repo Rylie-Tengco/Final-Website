@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import profilePicture from '../images/Profile Picture.jpeg';
 import { AudioContext } from '../App';
+import AudioProgress from '../components/AudioProgress';
 
 const PageContainer = styled.div`
   max-width: min(1200px, 90vw);
@@ -89,6 +90,7 @@ const AudioPlayer = styled.div`
     gap: 0.5rem;
   }
 `;
+
 const BaseButton = styled.button`
   width: 36px;
   height: 36px;
@@ -125,30 +127,6 @@ const ShuffleIcon = () => (
     <path d="M17 17h-1.559l-9.7-10.673A3 3 0 0 0 3.44 5H2v2h1.559l9.7 10.673A3 3 0 0 0 15.559 19H17v2l4-3-4-3v2zm0-12h-1.559a3 3 0 0 0-2.3 1.327L8.859 11l1.408 1.548 4.282-4.707A1 1 0 0 1 15.559 7H17v2l4-3-4-3v2z"/>
   </svg>
 );
-
-const ProgressBar = styled.div`
-  flex: 1;
-  height: 4px;
-  background: rgba(26, 27, 47, 0.2);
-  border-radius: 2px;
-  position: relative;
-  cursor: pointer;
-
-  &:hover {
-    height: 6px;
-  }
-`;
-
-const Progress = styled.div`
-  height: 100%;
-  background: #2A9D8F;
-  border-radius: 2px;
-  width: ${props => props.width}%;
-  transition: width 0.1s linear;
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
 
 const VolumeContainer = styled.div`
   position: relative;
@@ -300,21 +278,7 @@ const pageTransition = {
 
 function AboutMe() {
   const { audioElement, isPlaying, setIsPlaying, volume, setVolume, currentTrack, nextTrack, previousTrack, isShuffleOn, toggleShuffle } = useContext(AudioContext);
-  const [progress, setProgress] = useState(0);
   const [showVolume, setShowVolume] = useState(false);
-  const progressBarRef = useRef(null);
-
-  useEffect(() => {
-    if (!audioElement) return;
-
-    const updateProgress = () => {
-      const value = (audio.currentTime / audio.duration) * 100;
-      setProgress(isNaN(value) ? 0 : value);
-    };
-
-    audioElement.addEventListener('timeupdate', updateProgress);
-    return () => audioElement.removeEventListener('timeupdate', updateProgress);
-  }, []);
 
   const togglePlay = (e) => {
     e.preventDefault();
@@ -327,12 +291,6 @@ function AboutMe() {
       audioElement.pause();
       setIsPlaying(false);
     }
-  };
-
-  const handleProgressClick = (e) => {
-    const bounds = progressBarRef.current.getBoundingClientRect();
-    const percent = (e.clientX - bounds.left) / bounds.width;
-    audioElement.currentTime = percent * audioElement.duration;
   };
 
   const handleVolumeChange = (e) => {
@@ -432,9 +390,7 @@ function AboutMe() {
                   </PlayButton>
                   <PlayButton onClick={handleNextTrack}>⏭</PlayButton>
                 </div>
-                <ProgressBar ref={progressBarRef} onClick={handleProgressClick}>
-                  <Progress width={progress} />
-                </ProgressBar>
+                <AudioProgress />
                 <VolumeContainer 
                   onMouseEnter={() => setShowVolume(true)}
                   onMouseLeave={() => setShowVolume(false)}

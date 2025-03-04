@@ -110,6 +110,36 @@ const ContentWrapper = styled.main`
   }
 `;
 
+const ProgressBar = styled.div`
+  flex: 1;
+  height: 4px;
+  background: rgba(26, 27, 47, 0.2);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    height: 6px;
+  }
+`;
+
+const Progress = styled.div`
+  height: 100%;
+  background: linear-gradient(90deg, #2A9D8F 0%, #1E3D59 100%);
+  border-radius: 2px;
+  width: ${props => props.width}%;
+  transition: width 0.2s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 4px rgba(42, 157, 143, 0.5);
+`;
+
+export const StyledComponents = {
+  ProgressBar,
+  Progress
+};
+
 export const AudioContext = createContext();
 
 const musicTracks = [
