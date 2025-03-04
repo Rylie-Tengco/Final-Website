@@ -190,8 +190,11 @@ const FeedbackMessage = styled.p`
   color: #333;
   margin: 0;
   line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 `;
-
 const ErrorText = styled.span`
   color: #E76F51;
   font-size: 0.9rem;
