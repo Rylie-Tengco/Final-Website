@@ -339,7 +339,7 @@ const DinoRun = ({ setScore, gameStarted, setGameStarted, gameOver, setGameOver 
     speed: 5
   });
   const gameRef = useRef({
-    speed: 5,
+    speed: 8,
     score: 0,
     frameCount: 0,
     spawnInterval: 50,
@@ -795,6 +795,181 @@ const SnakeGame = ({ setScore, gameStarted, setGameStarted, gameOver, setGameOve
   );
 };
 
+const BallBounce = ({ setScore, gameStarted, setGameStarted, gameOver, setGameOver }) => {
+  const canvasRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const ballRef = useRef({
+    x: 200,
+    y: 200,
+    radius: 10,
+    speed: 8,
+    angle: -Math.PI/4  // 45 degrees upward
+  });
+  const platformRef = useRef({
+    x: 160,
+    width: 80,
+    height: 10,
+    speed: 8
+  });
+  const gameRef = useRef({
+    lastTimestamp: 0
+  });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    canvas.width = 400;
+    canvas.height = 400;
+    let animationFrameId;
+
+    const handleMouseMove = (e) => {
+      if (!gameStarted || gameOver) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      platformRef.current.x = Math.max(0, Math.min(canvas.width - platformRef.current.width, mouseX));
+    };
+
+    const handleTouch = (e) => {
+      if (!gameStarted) {
+        setGameStarted(true);
+        return;
+      }
+      if (gameOver) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const touchX = e.touches[0].clientX - rect.left;
+      platformRef.current.x = Math.max(0, Math.min(canvas.width - platformRef.current.width, touchX));
+    };
+
+    const resetGame = () => {
+      // Random angle between -60 and -120 degrees
+      const randomAngle = -(Math.PI/3 + Math.random() * Math.PI/3);
+      ballRef.current = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        radius: 10,
+        speed: 8,
+        angle: randomAngle
+      };
+      platformRef.current.x = (canvas.width - platformRef.current.width) / 2;
+      setScore(0);
+    };
+
+    const update = () => {
+      if (!gameStarted || gameOver) return;
+
+      // Update ball position using angle and speed
+      ballRef.current.x += ballRef.current.speed * Math.cos(ballRef.current.angle);
+      ballRef.current.y += ballRef.current.speed * Math.sin(ballRef.current.angle);
+
+      // Ball-wall collisions
+      if (ballRef.current.x - ballRef.current.radius <= 0) {
+        ballRef.current.x = ballRef.current.radius;
+        ballRef.current.angle = Math.PI - ballRef.current.angle;
+      } else if (ballRef.current.x + ballRef.current.radius >= canvas.width) {
+        ballRef.current.x = canvas.width - ballRef.current.radius;
+        ballRef.current.angle = Math.PI - ballRef.current.angle;
+      }
+      
+      if (ballRef.current.y - ballRef.current.radius <= 0) {
+        ballRef.current.y = ballRef.current.radius;
+        ballRef.current.angle = -ballRef.current.angle;
+      }
+
+      // Ball-platform collision
+      const platformY = canvas.height - 20;
+      if (ballRef.current.y + ballRef.current.radius >= platformY &&
+          ballRef.current.y + ballRef.current.radius <= platformY + platformRef.current.height &&
+          ballRef.current.x >= platformRef.current.x &&
+          ballRef.current.x <= platformRef.current.x + platformRef.current.width) {
+        
+        // Calculate new angle based on where the ball hits the platform
+        const hitPosition = (ballRef.current.x - platformRef.current.x) / platformRef.current.width;
+        // Map hit position (0 to 1) to angle (-60 to 60 degrees)
+        const bounceAngle = (hitPosition - 0.5) * Math.PI/1.5;
+        // Set new angle (negative to go upward)
+        ballRef.current.angle = -Math.PI/2 + bounceAngle;
+        
+        ballRef.current.y = platformY - ballRef.current.radius;
+        setScore(s => s + 1);
+      }
+
+      // Game over condition
+      if (ballRef.current.y + ballRef.current.radius > canvas.height) {
+        setGameOver(true);
+      }
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw platform
+      ctx.fillStyle = '#2A9D8F';
+      ctx.fillRect(
+        platformRef.current.x,
+        canvas.height - 20,
+        platformRef.current.width,
+        platformRef.current.height
+      );
+
+      // Draw ball
+      ctx.fillStyle = '#E76F51';
+      ctx.beginPath();
+      ctx.arc(
+        ballRef.current.x,
+        ballRef.current.y,
+        ballRef.current.radius,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+    };
+
+    const gameLoop = () => {
+      if (!gameStarted || gameOver) return;
+
+      update();
+      draw();
+
+      animationFrameId = requestAnimationFrame(gameLoop);
+    };
+
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('touchmove', handleTouch, { passive: false });
+
+    if (gameStarted && !gameOver) {
+      resetGame();
+      gameLoop();
+    }
+
+    return () => {
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('touchmove', handleTouch);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [gameStarted, gameOver, setGameOver, setScore]);
+
+  return (
+    <GameContainer>
+      <Canvas ref={canvasRef} />
+      {!gameStarted && (
+        <Button onClick={() => setGameStarted(true)}>
+          {gameOver ? 'Play Again' : 'Start Game'}
+        </Button>
+      )}
+      {gameStarted && !gameOver && (
+        <Button onClick={() => {
+          setGameStarted(false);
+          setIsPaused(false);
+        }}>
+          Stop
+        </Button>
+      )}
+    </GameContainer>
+  );
+};
+
 import Photobooth from '../components/Photobooth';
 
 function Minigame() {
@@ -840,6 +1015,12 @@ function Minigame() {
             Block Run
           </GameButton>
           <GameButton 
+            active={selectedGame === 'ballbounce'} 
+            onClick={() => handleGameSelect('ballbounce')}
+          >
+            Ball Bounce
+          </GameButton>
+          <GameButton 
             active={selectedGame === 'photobooth'} 
             onClick={() => handleGameSelect('photobooth')}
           >
@@ -873,6 +1054,14 @@ function Minigame() {
             gameOver={gameOver}
             setGameOver={setGameOver}
           />
+        ) : selectedGame === 'ballbounce' ? (
+          <BallBounce
+            setScore={setScore}
+            gameStarted={gameStarted}
+            setGameStarted={setGameStarted}
+            gameOver={gameOver}
+            setGameOver={setGameOver}
+          />
         ) : selectedGame === 'photobooth' ? (
           <Photobooth />
         ) : (
@@ -893,6 +1082,13 @@ function Minigame() {
               Press spacebar or tap the screen to make the ball jump.
               Navigate through the barriers to score points.
               Avoid hitting the barriers or the ground!
+            </p>
+          ) : selectedGame === 'ballbounce' ? (
+            <p>
+              Move your mouse or finger left and right to control the platform.
+              Keep the ball bouncing and avoid letting it hit the ground.
+              Score points for each successful bounce!
+              The ball's direction will be influenced by where it hits the platform.
             </p>
           ) : selectedGame === 'photobooth' ? (
             <p>
