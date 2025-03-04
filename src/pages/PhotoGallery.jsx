@@ -126,15 +126,15 @@ const ModalContent = styled(motion.div)`
   justify-content: center;
   padding: clamp(0.5rem, 2vw, 1rem);
   border-radius: 12px;
-  touch-action: none;
-  cursor: grab;
-  
-  &:active {
-    cursor: grabbing;
-  }
   
   @media (max-width: 768px) {
     max-width: 95%;
+    touch-action: none;
+    cursor: grab;
+    
+    &:active {
+      cursor: grabbing;
+    }
   }
 `;
 
@@ -161,7 +161,7 @@ const NavigationButton = styled.button`
   padding: 1rem;
   cursor: pointer;
   border-radius: 50%;
-  display: none; /* Hide by default */
+  display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
@@ -169,12 +169,14 @@ const NavigationButton = styled.button`
   min-width: 44px;
   min-height: 44px;
   
-  @media (hover: hover) {
-    display: flex; /* Show only on devices that can hover */
-    
+  @media (min-width: 769px) {
     &:hover {
       background: rgba(0, 0, 0, 0.8);
     }
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 
   &:disabled {
@@ -412,9 +414,11 @@ function PhotoGallery() {
             >
               <ModalContent 
                 onClick={(e) => e.stopPropagation()}
-                drag="x"
-                dragConstraints={dragConstraints}
-                dragElastic={window.innerWidth <= 768 ? 0.4 : 0.7}
+                {...(window.innerWidth <= 768 ? {
+                  drag: "x",
+                  dragConstraints: dragConstraints,
+                  dragElastic: 0.4
+                } : {})}
                 onDragEnd={(e, { offset, velocity }) => {
                   const swipe = offset.x;
                   if (Math.abs(swipe) >= swipeThreshold) {
@@ -433,10 +437,12 @@ function PhotoGallery() {
                     damping: window.innerWidth <= 768 ? 40 : 30 
                   }
                 }}
-                whileDrag={{
-                  scale: 0.95,
-                  opacity: 0.9
-                }}
+                {...(window.innerWidth <= 768 ? {
+                  whileDrag: {
+                    scale: 0.95,
+                    opacity: 0.9
+                  }
+                } : {})}
               >
                 <CloseButton onClick={() => setSelectedImage(null)} aria-label="Close image">×</CloseButton>
                 <PrevButton 
