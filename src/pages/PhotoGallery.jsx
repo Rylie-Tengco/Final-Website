@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Image imports
 import bestFriends from "../gallery images/BESTFRIENDS.jpeg";
@@ -145,13 +145,53 @@ const ModalImage = styled.img`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
+const NavigationButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1001;
+  min-width: 44px;
+  min-height: 44px;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.75rem;
+  }
+`;
+
+const PrevButton = styled(NavigationButton)`
+  left: 1rem;
+`;
+
+const NextButton = styled(NavigationButton)`
+  right: 1rem;
+`;
+
 const CloseButton = styled.button`
   position: absolute;
   top: -40px;
   right: 0;
   background: none;
   border: none;
-  color1: #E0F4FF;
+  color: #E0F4FF;
   font-size: clamp(1.75rem, 4vw, 2rem);
   cursor: pointer;
   padding: clamp(0.3rem, 1vw, 0.5rem);
@@ -228,6 +268,43 @@ const modalVariants = {
 
 function PhotoGallery() {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleImageSelect = (image, index) => {
+    setSelectedImage(image);
+    setCurrentImageIndex(index);
+  };
+
+  const handlePrevious = (e) => {
+    e.stopPropagation();
+    const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+    setCurrentImageIndex(newIndex);
+    setSelectedImage(images[newIndex]);
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+    setCurrentImageIndex(newIndex);
+    setSelectedImage(images[newIndex]);
+  };
+
+  const handleKeyDown = (e) => {
+    if (selectedImage) {
+      if (e.key === 'ArrowLeft') {
+        handlePrevious(e);
+      } else if (e.key === 'ArrowRight') {
+        handleNext(e);
+      } else if (e.key === 'Escape') {
+        setSelectedImage(null);
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentImageIndex, selectedImage]);
 
   const images = [
     {
@@ -308,7 +385,7 @@ function PhotoGallery() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              onClick={() => setSelectedImage(image)}
+              onClick={() => handleImageSelect(image, index)}
             >
               <Image src={image.src} alt={image.caption} />
               <ImageOverlay className="overlay">
@@ -327,8 +404,20 @@ function PhotoGallery() {
               variants={modalVariants}
               onClick={() => setSelectedImage(null)}
             >
-              <ModalContent>
-                <CloseButton onClick={() => setSelectedImage(null)}>×</CloseButton>
+              <ModalContent onClick={(e) => e.stopPropagation()}>
+                <CloseButton onClick={() => setSelectedImage(null)} aria-label="Close image">×</CloseButton>
+                <PrevButton 
+                  onClick={handlePrevious} 
+                  aria-label="Previous image"
+                >
+                  ❮
+                </PrevButton>
+                <NextButton 
+                  onClick={handleNext}
+                  aria-label="Next image"
+                >
+                  ❯
+                </NextButton>
                 <ModalImage 
                   src={selectedImage.src} 
                   alt={selectedImage.caption} 
