@@ -126,6 +126,12 @@ const ModalContent = styled(motion.div)`
   justify-content: center;
   padding: clamp(0.5rem, 2vw, 1rem);
   border-radius: 12px;
+  touch-action: none;
+  cursor: grab;
+  
+  &:active {
+    cursor: grabbing;
+  }
   
   @media (max-width: 768px) {
     max-width: 95%;
@@ -155,7 +161,7 @@ const NavigationButton = styled.button`
   padding: 1rem;
   cursor: pointer;
   border-radius: 50%;
-  display: flex;
+  display: none; /* Hide by default */
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
@@ -163,17 +169,17 @@ const NavigationButton = styled.button`
   min-width: 44px;
   min-height: 44px;
   
-  &:hover {
-    background: rgba(0, 0, 0, 0.8);
+  @media (hover: hover) {
+    display: flex; /* Show only on devices that can hover */
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.75rem;
   }
 `;
 
@@ -269,6 +275,8 @@ const modalVariants = {
 function PhotoGallery() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const dragConstraints = { left: 0, right: 0 };
+  const swipeThreshold = 50;
 
   const handleImageSelect = (image, index) => {
     setSelectedImage(image);
@@ -404,7 +412,30 @@ function PhotoGallery() {
               variants={modalVariants}
               onClick={() => setSelectedImage(null)}
             >
-              <ModalContent onClick={(e) => e.stopPropagation()}>
+              <ModalContent 
+                onClick={(e) => e.stopPropagation()}
+                drag="x"
+                dragConstraints={dragConstraints}
+                dragElastic={0.7}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = offset.x;
+                  if (Math.abs(swipe) >= swipeThreshold) {
+                    if (swipe > 0) {
+                      handlePrevious(e);
+                    } else {
+                      handleNext(e);
+                    }
+                  }
+                }}
+                animate={{
+                  x: 0,
+                  transition: { type: "spring", stiffness: 300, damping: 30 }
+                }}
+                whileDrag={{
+                  scale: 0.95,
+                  opacity: 0.9
+                }}
+              >
                 <CloseButton onClick={() => setSelectedImage(null)} aria-label="Close image">×</CloseButton>
                 <PrevButton 
                   onClick={handlePrevious} 
