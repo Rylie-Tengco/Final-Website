@@ -717,10 +717,7 @@ const SnakeGame = ({ setScore, gameStarted, setGameStarted, gameOver, setGameOve
 
     const handleTouchStart = (e) => {
       e.preventDefault();
-      if (!gameStarted) {
-        setGameStarted(true);
-        return;
-      }
+      if (!gameStarted) return;
       touchStartRef.current = {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY
@@ -831,11 +828,7 @@ const BallBounce = ({ setScore, gameStarted, setGameStarted, gameOver, setGameOv
     };
 
     const handleTouch = (e) => {
-      if (!gameStarted) {
-        setGameStarted(true);
-        return;
-      }
-      if (gameOver) return;
+      if (!gameStarted || gameOver) return;
 
       const rect = canvas.getBoundingClientRect();
       const touchX = e.touches[0].clientX - rect.left;
