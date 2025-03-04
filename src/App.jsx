@@ -114,11 +114,11 @@ export const AudioContext = createContext();
 
 const musicTracks = [
   { src: selfLoveMusic, title: 'Self Love' },
-  { src: amIDreamingMusic, title: 'Am I Dreaming' },
-  { src: callingMusic, title: 'Calling' },
-  { src: linkUpMusic, title: 'Link Up' },
   { src: monaLisaMusic, title: 'Mona Lisa' },
-  { src: sunflowerMusic, title: 'Sunflower' }
+  { src: sunflowerMusic, title: 'Sunflower' },
+  { src: linkUpMusic, title: 'Link Up' },
+  { src: callingMusic, title: 'Calling' },
+  { src: amIDreamingMusic, title: 'Am I Dreaming' }
 ];
 
 function App() {
@@ -126,6 +126,7 @@ function App() {
   const [volume, setVolume] = useState(1);
   const [audioElement, setAudioElement] = useState(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [isShuffleOn, setIsShuffleOn] = useState(false);
 
   useEffect(() => {
     const audio = new Audio(musicTracks[currentTrackIndex].src);
@@ -147,8 +148,13 @@ function App() {
     loadAndPlay();
 
     audio.addEventListener('ended', () => {
-      const nextIndex = (currentTrackIndex + 1) % musicTracks.length;
-      setCurrentTrackIndex(nextIndex);
+      if (isShuffleOn) {
+        const nextIndex = Math.floor(Math.random() * musicTracks.length);
+        setCurrentTrackIndex(nextIndex);
+      } else {
+        const nextIndex = (currentTrackIndex + 1) % musicTracks.length;
+        setCurrentTrackIndex(nextIndex);
+      }
     });
 
     return () => {
@@ -165,8 +171,24 @@ function App() {
       volume,
       setVolume,
       currentTrack: musicTracks[currentTrackIndex],
-      nextTrack: () => setCurrentTrackIndex((currentTrackIndex + 1) % musicTracks.length),
-      previousTrack: () => setCurrentTrackIndex((currentTrackIndex - 1 + musicTracks.length) % musicTracks.length)
+      nextTrack: () => {
+        if (isShuffleOn) {
+          const nextIndex = Math.floor(Math.random() * musicTracks.length);
+          setCurrentTrackIndex(nextIndex);
+        } else {
+          setCurrentTrackIndex((currentTrackIndex + 1) % musicTracks.length);
+        }
+      },
+      previousTrack: () => {
+        if (isShuffleOn) {
+          const nextIndex = Math.floor(Math.random() * musicTracks.length);
+          setCurrentTrackIndex(nextIndex);
+        } else {
+          setCurrentTrackIndex((currentTrackIndex - 1 + musicTracks.length) % musicTracks.length);
+        }
+      },
+      isShuffleOn,
+      toggleShuffle: () => setIsShuffleOn(prev => !prev)
     }}>
       <Router>
         <Global styles={globalStyles} />

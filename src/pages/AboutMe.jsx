@@ -89,10 +89,7 @@ const AudioPlayer = styled.div`
     gap: 0.5rem;
   }
 `;
-const PlayButton = styled.button`
-  background: #2A9D8F;
-  color: white;
-  border: none;
+const BaseButton = styled.button`
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -100,12 +97,34 @@ const PlayButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  border: none;
+`;
+
+const PlayButton = styled(BaseButton)`
+  background: #2A9D8F;
+  color: white;
 
   &:hover {
     background: #1A1B2F;
   }
 `;
+
+const ShuffleButton = styled(BaseButton)`
+  background: ${props => props.isActive ? 'white' : '#2A9D8F'};
+  color: ${props => props.isActive ? '#2A9D8F' : 'white'};
+  border: 2px solid #2A9D8F;
+
+  &:hover {
+    background: ${props => props.isActive ? '#f5f5f5' : '#1A1B2F'};
+  }
+`;
+
+const ShuffleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17 17h-1.559l-9.7-10.673A3 3 0 0 0 3.44 5H2v2h1.559l9.7 10.673A3 3 0 0 0 15.559 19H17v2l4-3-4-3v2zm0-12h-1.559a3 3 0 0 0-2.3 1.327L8.859 11l1.408 1.548 4.282-4.707A1 1 0 0 1 15.559 7H17v2l4-3-4-3v2z"/>
+  </svg>
+);
 
 const ProgressBar = styled.div`
   flex: 1;
@@ -280,7 +299,7 @@ const pageTransition = {
 };
 
 function AboutMe() {
-  const { audioElement, isPlaying, setIsPlaying, volume, setVolume, currentTrack, nextTrack, previousTrack } = useContext(AudioContext);
+  const { audioElement, isPlaying, setIsPlaying, volume, setVolume, currentTrack, nextTrack, previousTrack, isShuffleOn, toggleShuffle } = useContext(AudioContext);
   const [progress, setProgress] = useState(0);
   const [showVolume, setShowVolume] = useState(false);
   const progressBarRef = useRef(null);
@@ -403,7 +422,10 @@ function AboutMe() {
             </SocialMediaContainer>
             <AudioPlayer>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%' }}>
-                <div className="controls">
+              <div className="controls" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <ShuffleButton onClick={toggleShuffle} isActive={isShuffleOn} aria-label="Toggle shuffle">
+                  <ShuffleIcon />
+                </ShuffleButton>
                   <PlayButton onClick={handlePreviousTrack}>⏮</PlayButton>
                   <PlayButton onClick={togglePlay}>
                     {isPlaying ? '⏸' : '▶'}
