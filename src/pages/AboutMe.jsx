@@ -322,6 +322,40 @@ function AboutMe() {
     audioElement.volume = value;
   };
 
+  useEffect(() => {
+    if (!audioElement) return;
+
+    const playWhenReady = () => {
+      if (isPlaying) {
+        audioElement.play()
+          .catch(err => console.error('Error playing audio:', err));
+      }
+    };
+
+    audioElement.addEventListener('canplaythrough', playWhenReady);
+    if (audioElement.readyState >= 3) {
+      playWhenReady();
+    }
+
+    return () => {
+      audioElement.removeEventListener('canplaythrough', playWhenReady);
+    };
+  }, [audioElement, isPlaying]);
+
+  const handlePreviousTrack = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    previousTrack();
+    setIsPlaying(true);
+  };
+
+  const handleNextTrack = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    nextTrack();
+    setIsPlaying(true);
+  };
+
   return (
     <motion.div
       initial="initial"
@@ -370,11 +404,11 @@ function AboutMe() {
             <AudioPlayer>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%' }}>
                 <div className="controls">
-                  <PlayButton onClick={previousTrack}>⏮</PlayButton>
+                  <PlayButton onClick={handlePreviousTrack}>⏮</PlayButton>
                   <PlayButton onClick={togglePlay}>
                     {isPlaying ? '⏸' : '▶'}
                   </PlayButton>
-                  <PlayButton onClick={nextTrack}>⏭</PlayButton>
+                  <PlayButton onClick={handleNextTrack}>⏭</PlayButton>
                 </div>
                 <ProgressBar ref={progressBarRef} onClick={handleProgressClick}>
                   <Progress width={progress} />

@@ -131,7 +131,20 @@ function App() {
     const audio = new Audio(musicTracks[currentTrackIndex].src);
     audio.loop = false;
     audio.volume = volume;
-    setAudioElement(audio);
+
+    const loadAndPlay = async () => {
+      try {
+        await audio.load();
+        setAudioElement(audio);
+        if (isPlaying) {
+          await audio.play();
+        }
+      } catch (error) {
+        console.error('Error loading audio:', error);
+      }
+    };
+
+    loadAndPlay();
 
     audio.addEventListener('ended', () => {
       const nextIndex = (currentTrackIndex + 1) % musicTracks.length;
@@ -142,7 +155,7 @@ function App() {
       audio.pause();
       audio.src = '';
     };
-  }, [currentTrackIndex]);
+  }, [currentTrackIndex, isPlaying, volume]);
 
   return (
     <AudioContext.Provider value={{
