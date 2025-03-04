@@ -1,5 +1,35 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const Button = styled.button`
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: ${props => props.active ? '#2A9D8F' : 'rgba(255, 255, 255, 0.8)'};
+  color: ${props => props.active ? '#ffffff' : '#1E3D59'};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
 
 const PageContainer = styled.div`
   max-width: 1200px;
@@ -116,6 +146,7 @@ const cardVariants = {
 };
 
 function Goals() {
+  const [activeView, setActiveView] = useState('professional');
   const professionalGoals = [
     {
       title: "Make a Personal Website",
@@ -197,8 +228,25 @@ function Goals() {
       transition={{ duration: 0.3 }}
     >
       <PageContainer>
-        <Title first>Professional Goals</Title>
-        <GoalsContainer>
+        <ButtonContainer>
+          <Button
+            active={activeView === 'professional'}
+            onClick={() => setActiveView('professional')}
+          >
+            Professional Goals
+          </Button>
+          <Button
+            active={activeView === 'personal'}
+            onClick={() => setActiveView('personal')}
+          >
+            Personal Goals
+          </Button>
+        </ButtonContainer>
+
+        {activeView === 'professional' && (
+          <>
+            <Title first>Professional Goals</Title>
+            <GoalsContainer>
           {professionalGoals.map((goal, index) => (
             <GoalCard
               key={index}
@@ -224,10 +272,14 @@ function Goals() {
               </GoalMilestones>
             </GoalCard>
           ))}
-        </GoalsContainer>
+            </GoalsContainer>
+          </>
+        )}
 
-        <Title>Personal Goals</Title>
-        <GoalsContainer>
+        {activeView === 'personal' && (
+          <>
+            <Title first>Personal Goals</Title>
+            <GoalsContainer>
           {personalGoals.map((goal, index) => (
             <GoalCard
               key={index}
@@ -253,7 +305,9 @@ function Goals() {
               </GoalMilestones>
             </GoalCard>
           ))}
-        </GoalsContainer>
+            </GoalsContainer>
+          </>
+        )}
       </PageContainer>
     </motion.div>
   );
