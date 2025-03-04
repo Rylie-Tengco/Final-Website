@@ -127,27 +127,35 @@ function App() {
   const [audioElement, setAudioElement] = useState(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isShuffleOn, setIsShuffleOn] = useState(false);
+  const [preloadedAudios, setPreloadedAudios] = useState({});
 
+  // Preload all tracks when component mounts
   useEffect(() => {
-    const audio = new Audio(musicTracks[currentTrackIndex].src);
-    audio.loop = false;
-    audio.volume = volume;
+    const loadedAudios = {};
+    musicTracks.forEach(track => {
+      const audio = new Audio(track.src);
+      audio.preload = "auto";
+      loadedAudios[track.title] = audio;
+    });
+    setPreloadedAudios(loadedAudios);
+  }, []);
 
-    const loadAndPlay = async () => {
-      try {
-        await audio.load();
-        setAudioElement(audio);
-        if (isPlaying) {
-          await audio.play();
-        }
-      } catch (error) {
-        console.error('Error loading audio:', error);
+  // Handle audio playback using preloaded tracks
+  useEffect(() => {
+    if (!preloadedAudios[musicTracks[currentTrackIndex].title]) return;
+
+    const currentAudio = preloadedAudios[musicTracks[currentTrackIndex].title];
+    currentAudio.volume = volume;
+    setAudioElement(currentAudio);
+
+    if (isPlaying) {
+      const playPromise = currentAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => console.error('Error playing audio:', error));
       }
-    };
+    }
 
-    loadAndPlay();
-
-    audio.addEventListener('ended', () => {
+    const handleEnded = () => {
       if (isShuffleOn) {
         const nextIndex = Math.floor(Math.random() * musicTracks.length);
         setCurrentTrackIndex(nextIndex);
@@ -155,13 +163,23 @@ function App() {
         const nextIndex = (currentTrackIndex + 1) % musicTracks.length;
         setCurrentTrackIndex(nextIndex);
       }
+    };
+
+    currentAudio.addEventListener('ended', handleEnded);
+
+    // Pause other tracks
+    Object.values(preloadedAudios).forEach(audio => {
+      if (audio !== currentAudio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
     });
 
     return () => {
-      audio.pause();
-      audio.src = '';
+      currentAudio.removeEventListener('ended', handleEnded);
+      currentAudio.pause();
     };
-  }, [currentTrackIndex, isPlaying, volume]);
+  }, [currentTrackIndex, isPlaying, volume, preloadedAudios]);
 
   return (
     <AudioContext.Provider value={{
@@ -172,20 +190,30 @@ function App() {
       setVolume,
       currentTrack: musicTracks[currentTrackIndex],
       nextTrack: () => {
+        let nextIndex;
         if (isShuffleOn) {
-          const nextIndex = Math.floor(Math.random() * musicTracks.length);
-          setCurrentTrackIndex(nextIndex);
+          nextIndex = Math.floor(Math.random() * musicTracks.length);
         } else {
-          setCurrentTrackIndex((currentTrackIndex + 1) % musicTracks.length);
+          nextIndex = (currentTrackIndex + 1) % musicTracks.length;
         }
+        // Reset time only when changing tracks
+        if (preloadedAudios[musicTracks[nextIndex].title]) {
+          preloadedAudios[musicTracks[nextIndex].title].currentTime = 0;
+        }
+        setCurrentTrackIndex(nextIndex);
       },
       previousTrack: () => {
+        let nextIndex;
         if (isShuffleOn) {
-          const nextIndex = Math.floor(Math.random() * musicTracks.length);
-          setCurrentTrackIndex(nextIndex);
+          nextIndex = Math.floor(Math.random() * musicTracks.length);
         } else {
-          setCurrentTrackIndex((currentTrackIndex - 1 + musicTracks.length) % musicTracks.length);
+          nextIndex = (currentTrackIndex - 1 + musicTracks.length) % musicTracks.length;
         }
+        // Reset time only when changing tracks
+        if (preloadedAudios[musicTracks[nextIndex].title]) {
+          preloadedAudios[musicTracks[nextIndex].title].currentTime = 0;
+        }
+        setCurrentTrackIndex(nextIndex);
       },
       isShuffleOn,
       toggleShuffle: () => setIsShuffleOn(prev => !prev)
