@@ -919,11 +919,7 @@ function Minigame() {
               <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                 <Button onClick={() => {
                   setGameOver(false);
-                  setGameStarted(false);
-                  setScore(0);
-                  setTimeout(() => {
-                    setGameStarted(true);
-                  }, 0);
+                  setGameStarted(true);
                 }}>
                   Play Again
                 </Button>
