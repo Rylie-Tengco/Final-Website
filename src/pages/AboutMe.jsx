@@ -542,7 +542,7 @@ function AboutMe() {
                     <path d="M12 2C6.486 2 2 6.486 2 12c0 5.513 4.486 10 10 10s10-4.487 10-10c0-5.514-4.486-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/>
                     <path d="M13 7h-2v6h6v-2h-4z"/>
                   </svg>
-                  <ReferenceName>Claude AI</ReferenceName>
+                  <ReferenceName>Claude</ReferenceName>
                 </ReferenceLink>
                 <ReferenceLink 
                   href="https://www.w3schools.com" 
