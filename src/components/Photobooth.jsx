@@ -121,8 +121,10 @@ const Photobooth = () => {
   const generatePhotoStrip = useCallback(() => {
     const canvas = photoStripRef.current;
     const ctx = canvas.getContext('2d');
+    const video = videoRef.current;
+    const aspectRatio = video.videoHeight / video.videoWidth;
     const photoWidth = 200;
-    const photoHeight = 150;
+    const photoHeight = photoWidth * aspectRatio;
     const padding = 10;
 
     canvas.width = photoWidth + (padding * 2);
